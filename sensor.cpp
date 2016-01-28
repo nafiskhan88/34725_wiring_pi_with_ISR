@@ -24,13 +24,34 @@ int main ()
 	init_interrupt (); //PERS_3_CYCLE
 
 	uint16_t r, g, b, c;
-
+	uint16_t status;
 
 
 
 	for (;;)
                 {
                     
+                	status = read8(TCS34725_STATUS);
+
+                	printf (" Status Register  %x \n", read8(TCS34725_STATUS)) ;
+
+                	if ((status & 0x10) == 0x10)
+
+                	{
+                	getRawData (&r , &g, &b, &c);
+
+                    printf("Clear data :%x\n Red data :%x\n Green data :%x\n Blue data :%x\n", c, r, g, b);
+
+                    clear_interrupt(); 
+
+                    delay (500);
+
+                	}
+
+
+
+
+                    #if 0
                 	getRawData (&r , &g, &b, &c);
 
                     printf("Clear data = %x\n", c);
@@ -42,6 +63,8 @@ int main ()
                     printf(" Blue_data = %x\n ", b);   
 
                     delay (500); 
+
+                    #endif
                         
                 }
 

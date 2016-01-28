@@ -71,7 +71,7 @@ static volatile int globalCounter = 0 ;
 void myInterrupt (void)
 {
   //printf("Global_counter from Interrupt function = %d\n",globalCounter );
-
+  uint16_t r, g, b, c;
   getRawData (&r , &g, &b, &c);
 
                     printf("Clear data = %x\n", c);
@@ -80,7 +80,9 @@ void myInterrupt (void)
 
                     printf(" Green_data = %x\n" , g);
 
-                    printf(" Blue_data = %x\n ", b);   
+                    printf(" Blue_data = %x\n ", b); 
+
+
 
 
   globalCounter++ ;
@@ -105,17 +107,17 @@ int main (void)
 
   Adafruit_TCS34725_enable();  //will power up first , then wait 3ms then enable RGBC and gain
 
-  interrupt_limit (100, 2000); //first low then high value
+  interrupt_limit (100, 3000); //first low then high value
 
   init_interrupt (); //PERS_3_CYCLE
 
-  uint16_t r, g, b, c;
+  
 
   
 
   int myCounter = 0 ;
 
-  #if 0
+  #if 1
 
   if (wiringPiSetup () < 0)
   {
@@ -146,6 +148,7 @@ int main (void)
     timeinfo = localtime ( &rawtime );
     printf ( "Interrupt happened on %s", asctime (timeinfo) );
     myCounter = globalCounter ;
+    clear_interrupt(); 
   }
 
   return 0 ;

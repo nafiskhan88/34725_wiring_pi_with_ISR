@@ -76,9 +76,9 @@ void Adafruit_TCS34725_enable(void)
   wiringPiSetup ();                         //setup I2C for Raspberry pi. This needs to be called at the very beginning
         
 
-  fd = wiringPiI2CSetup (TCS34725_ADDRESS) ; 
+  fd = wiringPiI2CSetup (0x29) ; 
 
-  printf("%d\n", fd);
+  printf(" value of fd %x\n", fd);
 
   #if 1
 
@@ -267,7 +267,7 @@ uint8_t reg;
 //interrupt limit should be called first
 
 
-write8 (TCS34725_PERS , TCS34725_PERS_3_CYCLE);  //0b0101, 10 clear channel values outside threshhold values
+write8 (TCS34725_PERS , TCS34725_PERS_15_CYCLE);  //0b0101, 10 clear channel values outside threshhold values
 
 printf (" Register 0x0C after Setting counter:  %x \n", read8(TCS34725_PERS)) ;
 
@@ -304,11 +304,31 @@ void interrupt_limit (uint16_t low, uint16_t high)
 
 }
 
+#if 0
+/* 8 bit Register Write   */
+
+void write8(uint8_t reg, uint16_t value)
+
+{
+
+  wiringPiI2CWriteReg8(fd,(TCS34725_COMMAND_BIT|reg), (value & 0xFF));
+
+  //return 0;
+
+  //int wiringPiI2CWriteReg8 (int fd, int reg, int data) ;
+
+
+}
+#endif
 
 void clear_interrupt()
 {
 
-write8 ( TCS34725_ADDRESS, 0xE6);  //Use command register to clear interrupt. bit 5:6 is 11,and 0:4 is 00110
+//write8 (0xE0, 0x66 );
+
+
+
+wiringPiI2CWrite ( fd, (TCS34725_COMMAND_BIT | 0x66));  //Use command register to clear interrupt. bit 5:6 is 11,and 0:4 is 00110
 
 
 }
