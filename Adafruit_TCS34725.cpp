@@ -95,7 +95,7 @@ void Adafruit_TCS34725_enable(void)
     else
   {
 
-    printf("Device ID = %d\n", x);
+    printf("Device ID = %x\n", x);
   }
 
   //now power on sensor by writing to 0x00 to 0x01
@@ -184,7 +184,7 @@ float powf(const float x, const float y)
   return (float)(pow((double)x, (double)y));
 }
 
-#endif
+
 
 
 
@@ -235,7 +235,7 @@ uint16_t calculateLux(uint16_t r, uint16_t g, uint16_t b)
 
   return (uint16_t)illuminance;
 }
-
+#endif
 
 void getRawData (uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c)
 {
@@ -262,7 +262,7 @@ void init_interrupt (void)
 
 {
 
-uint8_t = reg;
+uint8_t reg;
 
 //interrupt limit should be called first
 
@@ -272,7 +272,7 @@ write8 (TCS34725_PERS , TCS34725_PERS_3_CYCLE);  //0b0101, 10 clear channel valu
 printf (" Register 0x0C after Setting counter:  %x \n", read8(TCS34725_PERS)) ;
 
 
-reg = read8 (TCS34725_ENABLE);
+reg = read8(TCS34725_ENABLE);
 
 if (reg != 0x13)
 

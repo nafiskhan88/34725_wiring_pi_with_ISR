@@ -23,6 +23,30 @@ int main ()
 
 	init_interrupt (); //PERS_3_CYCLE
 
+	uint16_t r, g, b, c;
+
+
+
+
+	for (;;)
+                {
+                    
+                	getRawData (&r , &g, &b, &c);
+
+                    printf("Clear data = %x\n", c);
+
+                    printf(" Red_data = %x\n" , r);
+
+                    printf(" Green_data = %x\n" , g);
+
+                    printf(" Blue_data = %x\n ", b);   
+
+                    delay (500); 
+                        
+                }
+
+
+
 
 	return 0;
 }
