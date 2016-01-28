@@ -82,24 +82,32 @@ void Adafruit_TCS34725_enable(void)
 
   #if 1
 
+  //first check sensor ID 
+
   uint8_t x = read8 (TCS34725_ID);
-  
+
   if (x != 0x44)
   {
     printf ("Device ID Mismatch");
 
     else
 
-      printf("Device ID = %d\n", x);
+    printf("Device ID = %d\n", x);
   }
 
+  //now power on sensor by writing to 0x00 to 0x01
 
   write8(TCS34725_ENABLE, TCS34725_ENABLE_PON);
-  //wiringPiI2CWriteReg8(fd, (0x80|0x00), (0xFF & 0x01));
 
-  printf(" Register 0x00 After Enable, Bit 0: %x\n", read8((TCS34725_ENABLE )));   //sanity checking
+  printf(" Register 0x00 after writing to enable, Bit 0: %x\n", read8((TCS34725_ENABLE )));   //sanity checking
 
-  delay (3);
+
+  delay (3);   //wait 3ms to give time to initiate RGBC
+
+
+
+
+//RGBC is now enabled after Power on sensor and wait for 3ms
 
   write8(TCS34725_ENABLE, TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN);  
 
@@ -107,6 +115,19 @@ void Adafruit_TCS34725_enable(void)
 
   printf(" Register 0x00  after RGBC enabled, Bit 1: %x\n", read8((TCS34725_ENABLE )));
 
+
+  //set integration time on register 0x01
+  write8 (TCS34725_ATIME, 0xD5);  //101ms
+
+  printf(" Register (0x01) Integration time : %x\n", read8((TCS34725_ATIME)));
+
+  //set gain on COntrol register at 0x0F
+  write8 (TCS34725_CONTROL , 0x00);  //set it to 1X gain
+
+  printf(" Control Register Gain Value : %x\n", read8((TCS34725_CONTROL)));
+
+  
+  
   #endif
 }
 
@@ -133,21 +154,14 @@ void init_sensor (void)
 
 {
 
+  #if 0
+
 //Enable wait timer form register 0x00
 
   write8 (TCS34725_ENABLE, (TCS34725_ENABLE_WEN | TCS34725_ENABLE_AEN | TCS34725_ENABLE_PON));     //bit 3 is set on register 0x00
 
   printf(" Register 0x00 After writing WEN , Bit 3 : %x\n", read8((TCS34725_ENABLE )));
 
-//set gain
-  write8 (TCS34725_CONTROL , 0x00);  //set it to 1X gain
-
-  printf(" Control Register Gain Value : %x\n", read8((TCS34725_CONTROL)));
-
-//set integration time on register 0x01
-  write8 (TCS34725_ATIME, 0xD5);  //101ms
-
-  printf(" Register (0x01) Integration time (0xFF = 2.4ms) : %x\n", read8((TCS34725_ATIME)));
 
   //enable wait time register
   write8(TCS34725_WTIME, TCS34725_WTIME_2_4MS);
@@ -159,18 +173,18 @@ void init_sensor (void)
 
   printf(" Config Register (0x0D) : %x\n", read8((TCS34725_WTIME )));
 
-  
+#endif  
 }
 
 
 
-
+#if 0
 float powf(const float x, const float y)
 {
   return (float)(pow((double)x, (double)y));
 }
 
-
+#endif
 
 
 
@@ -248,14 +262,26 @@ void init_interrupt (void)
 
 {
 
-write8 ( TCS34725_ENABLE, (TCS34725_ENABLE_AIEN| TCS34725_ENABLE_WEN |  TCS34725_ENABLE_AEN | TCS34725_ENABLE_PON)); //bit 4, 3, 1,0 is set. value should be 0x1B
 
-printf (" Register 0x00 after Interrupt Enable:  %x \n" , read8(TCS34725_ENABLE)) ;
+//interrupt limit should be called first
 
 
-write8 (TCS34725_PERS , 0x05);  //0b0101, 10 clear channel values outside threshhold values
+write8 (TCS34725_PERS , TCS34725_PERS_3_CYCLE);  //0b0101, 10 clear channel values outside threshhold values
 
 printf (" Register 0x0C after Setting counter:  %x \n", read8(TCS34725_PERS)) ;
+
+
+reg = read8 (TCS34725_ENABLE);
+
+if (reg != 0x13)
+
+  printf("Interrupt not enabled, enabling now");
+
+  write8 ( TCS34725_ENABLE, (TCS34725_ENABLE_AIEN| TCS34725_ENABLE_AEN | TCS34725_ENABLE_PON)); 
+
+  //bit 4,1,0 is set. value should be 0x13
+
+  printf (" Register 0x00 after Interrupt Enable:  %x \n" , read8(TCS34725_ENABLE)) ;
 
 }
 

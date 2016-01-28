@@ -7,3 +7,27 @@
 #include 	    <wiringPiI2C.h>
 #include 	    <Adafruit_TCS34725.h>
 #include 		<Adafruit_TCS34725>
+
+
+
+int main (void)
+
+{
+
+	//enable sensor
+
+	Adafruit_TCS34725_enable();  //will power up first , then wait 3ms then enable RGBC and gain
+
+	interrupt_limit (100, 2000); //first low then high value
+
+	init_interrupt (); //PERS_3_CYCLE
+
+
+
+
+
+
+	return 0;
+}
+
+
