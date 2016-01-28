@@ -1,0 +1,9 @@
+#include        <stdio.h>
+#include        <stdlib.h>
+#include        <inttypes.h>
+#include        <stdint.h>
+#include	    <time.h>
+#include 	    <wiringPi.h>
+#include 	    <wiringPiI2C.h>
+#include 	    <Adafruit_TCS34725.h>
+#include 		<Adafruit_TCS34725>
