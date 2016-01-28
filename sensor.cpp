@@ -1,3 +1,4 @@
+#include 		"Adafruit_TCS34725.cpp"
 #include        <stdio.h>
 #include        <stdlib.h>
 #include        <inttypes.h>
@@ -5,12 +6,12 @@
 #include	    <time.h>
 #include 	    <wiringPi.h>
 #include 	    <wiringPiI2C.h>
-#include 	    <Adafruit_TCS34725.h>
-#include 		<Adafruit_TCS34725>
+#include 	    "Adafruit_TCS34725.h"
 
 
 
-int main (void)
+
+int main ()
 
 {
 
@@ -21,10 +22,6 @@ int main (void)
 	interrupt_limit (100, 2000); //first low then high value
 
 	init_interrupt (); //PERS_3_CYCLE
-
-
-
-
 
 
 	return 0;

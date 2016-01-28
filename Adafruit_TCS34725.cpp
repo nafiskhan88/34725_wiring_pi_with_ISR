@@ -90,7 +90,10 @@ void Adafruit_TCS34725_enable(void)
   {
     printf ("Device ID Mismatch");
 
+  }
+
     else
+  {
 
     printf("Device ID = %d\n", x);
   }
@@ -104,10 +107,7 @@ void Adafruit_TCS34725_enable(void)
 
   delay (3);   //wait 3ms to give time to initiate RGBC
 
-
-
-
-//RGBC is now enabled after Power on sensor and wait for 3ms
+  //RGBC is now enabled after Power on sensor and wait for 3ms
 
   write8(TCS34725_ENABLE, TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN);  
 
@@ -262,6 +262,7 @@ void init_interrupt (void)
 
 {
 
+uint8_t = reg;
 
 //interrupt limit should be called first
 

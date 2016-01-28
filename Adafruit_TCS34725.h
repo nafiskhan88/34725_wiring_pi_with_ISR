@@ -96,6 +96,8 @@
 #define TCS34725_BDATAL           (0x1A)    /* Blue channel data */
 #define TCS34725_BDATAH           (0x1B)
 
+
+#if 0
 typedef enum
 {
   TCS34725_INTEGRATIONTIME_2_4MS  = 0xFF,   /**<  2.4ms - 1 cycle    - Max Count: 1024  */
@@ -116,6 +118,7 @@ typedef enum
 }
 tcs34725Gain_t;
 
+#endif
 /*
 class Adafruit_TCS34725 {
  public:
