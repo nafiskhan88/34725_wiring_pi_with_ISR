@@ -149,12 +149,12 @@ void Adafruit_TCS34725_disable(void)
 
 
 /* Set gain and integration time   */
-
+#if 0
 void init_sensor (void)
 
 {
 
-  #if 0
+  
 
 //Enable wait timer form register 0x00
 
@@ -173,12 +173,14 @@ void init_sensor (void)
 
   printf(" Config Register (0x0D) : %x\n", read8((TCS34725_WTIME )));
 
-#endif  
+ 
 }
+#endif 
 
 
+#if 1
 
-#if 0
+
 float powf(const float x, const float y)
 {
   return (float)(pow((double)x, (double)y));
@@ -258,31 +260,33 @@ void getRawData (uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c)
 
 
 
-void init_interrupt (void)
+void init_interrupt ()
 
 {
 
 uint8_t reg;
 
+
+
 //interrupt limit should be called first
 
 
-write8 (TCS34725_PERS , TCS34725_PERS_15_CYCLE);  //0b0101, 10 clear channel values outside threshhold values
+write8 (TCS34725_PERS , TCS34725_PERS_3_CYCLE);  //0b0101, 10 clear channel values outside threshhold values
 
-printf (" Register 0x0C after Setting counter:  %x \n", read8(TCS34725_PERS)) ;
+printf (" Persistance Register (0x0C) after Setting counter:  %x \n", read8(TCS34725_PERS)) ;
 
 
 reg = read8(TCS34725_ENABLE);
 
 if (reg != 0x13)
 
-  printf("Interrupt not enabled, enabling now");
+  printf("Interrupt not enabled , Enable register value %d ", reg);
 
   write8 ( TCS34725_ENABLE, (TCS34725_ENABLE_AIEN| TCS34725_ENABLE_AEN | TCS34725_ENABLE_PON)); 
 
   //bit 4,1,0 is set. value should be 0x13
 
-  printf (" Register 0x00 after Interrupt Enable:  %x \n" , read8(TCS34725_ENABLE)) ;
+  printf (" Enable Register (0x00) after Interrupt Enable:  %x \n" , read8(TCS34725_ENABLE)) ;
 
 }
 
@@ -291,7 +295,9 @@ if (reg != 0x13)
 
 void interrupt_limit (uint16_t low, uint16_t high)
 
-{
+{ 
+
+    //uint16_t high, low;
 
     write8(0x04, low & 0xFF);
 
@@ -300,6 +306,8 @@ void interrupt_limit (uint16_t low, uint16_t high)
     write8(0x06, high & 0xFF);
 
     write8(0x07, (high & 0xFF00) >> 8);
+
+    //printf(" High and Low values %x %x\n", high, low );
 
 
 }
@@ -326,7 +334,7 @@ void clear_interrupt()
 
 //write8 (0xE0, 0x66 );
 
-
+//using address only writing, without this interrupt will not clear
 
 wiringPiI2CWrite ( fd, (TCS34725_COMMAND_BIT | 0x66));  //Use command register to clear interrupt. bit 5:6 is 11,and 0:4 is 00110
 
